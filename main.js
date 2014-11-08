@@ -1,6 +1,31 @@
 (function() {
 
-function mode7(imgData) {
+function mode7(imgData, width, height) {
+  // magical matrix transformation goes here
+
+  // For each line:
+  //   1. Pretranslate based on the current origin
+  //   2. Rotate to the current yaw
+  //   3. Scale the whole thing by $some_factor
+  //   4. Translate back
+
+  // Viewer location
+  var ax = 500;
+  var ay = 30;
+  var az = 500;
+
+  // Camera rotation
+  var yaw = 0;
+
+  // Horizon location on screen
+  var horizon = 250;
+
+  // iterate over scanlines...
+  for (var y = 0; y < height; y++) {
+    // Step 1. Translate viewer location to origin
+
+  }
+
   return imgData;
 }
 
