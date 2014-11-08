@@ -1,32 +1,80 @@
 (function() {
 
-function mode7(imgData, width, height) {
-  // magical matrix transformation goes here
+function getImgDataOffset(imgData, x, y) {
+  return (x + imgData.width * y) * 4;
+}
 
-  // For each line:
-  //   1. Pretranslate based on the current origin
-  //   2. Rotate to the current yaw
-  //   3. Scale the whole thing by $some_factor
-  //   4. Translate back
+function getPixelData(imgData, x, y) {
+  var data = imgData.data;
+  var out = [];
 
-  // Viewer location
-  var ax = 500;
-  var ay = 30;
-  var az = 500;
+  var offset = getImgDataOffset(imgData, x, y);
+  out[0] = data[offset];
+  out[1] = data[offset+1];
+  out[2] = data[offset+2];
+  out[3] = data[offset+3];
 
-  // Camera rotation
-  var yaw = 0;
+  return out;
+}
+
+function putPixelData(imgData, pixelData, x, y) {
+  var offset = getImgDataOffset(imgData, x, y);
+
+  imgData.data[offset] = pixelData[0];
+  imgData.data[offset+1] = pixelData[1];
+  imgData.data[offset+2] = pixelData[2];
+  imgData.data[offset+3] = pixelData[3];
+}
+
+function mode7(ctx, imgData, width, height) {
+  // http://helixsoft.nl/articles/circle/sincos.htm
+  var start = Date.now();
+
+  var transformedImgData = ctx.createImageData(width, height);
+
+  // Camera height
+  var spaceZ = 20;
+
+  // Scale of space coordinates to screen coordinates
+  var scaleX = 2000;
+  var scaleY = 2000;
 
   // Horizon location on screen
   var horizon = 250;
 
+  // Angle of viewing?
+  var cx = 500;
+  var cy = 500;
+  // var angle = 90 * 180/Math.PI;
+  var angle = 90;
+
   // iterate over scanlines...
-  for (var y = 0; y < height; y++) {
-    // Step 1. Translate viewer location to origin
+  for (var screenY = 0; screenY < height; screenY++) {
+    // distance of the line to draw
+    var distance = (spaceZ * scaleY) / (screenY + horizon);
+
+    // calculate the distance between space points on the line
+    var horizontalScale = distance / scaleX;
+
+    // ?
+    var dx = -Math.sin(angle) * horizontalScale;
+    var dy = Math.cos(angle) * horizontalScale;
+
+    // Starting position
+    var spaceX = cx + (distance * Math.cos(angle)) - width/2 * dx;
+    var spaceY = cy + (distance * Math.sin(angle)) - width/2 * dy;
+
+    for (var screenX = 0; screenX < width; screenX++) {
+      var pixelData = getPixelData(imgData, Math.round(spaceX), Math.round(spaceY));
+      putPixelData(transformedImgData, pixelData, screenX, screenY);
+
+      spaceX += dx;
+      spaceY += dy;
+    }
 
   }
 
-  return imgData;
+  return transformedImgData;
 }
 
 function imageDataFromImage(img) {
@@ -43,9 +91,9 @@ function imageDataFromImage(img) {
 function render(canvas, img) {
   var imgData = imageDataFromImage(img);
 
-  imgData = mode7(imgData);
-
   var ctx = canvas.getContext('2d');
+  imgData = mode7(ctx, imgData, 500, 500);
+
   ctx.putImageData(imgData, 0, 0, 0, 0, 500, 500);
 }
 
