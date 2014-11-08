@@ -1,0 +1,25 @@
+{
+  "name": "mode7",
+  "version": "0.0.0",
+  "description": "Figuring out how to do Mode7 graphics in `<canvas>`.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node_modules/.bin/webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thomasboyt/mode7.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thomasboyt/mode7/issues"
+  },
+  "devDependencies": {
+    "webpack": "~1.4.13",
+    "file-loader": "~0.8.1",
+    "esnext-loader": "~1.1.0",
+    "webpack-dev-server": "~1.6.5"
+  }
+}
