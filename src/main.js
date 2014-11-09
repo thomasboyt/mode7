@@ -30,6 +30,13 @@ var Mode7Manager = function(canvas, img) {
   };
 
   this.horizOffset = 50;
+
+  var runLoop = () => {
+    this.render();
+    window.requestAnimationFrame(runLoop);
+  };
+
+  window.requestAnimationFrame(runLoop);
 };
 
 Mode7Manager.prototype.render = function() {
@@ -68,15 +75,14 @@ Mode7Manager.prototype.handleKeyDown = function(e) {
     this._move(step);
   } else if (keyCode === down) {
     this._move(-step);
+
   } else if (keyCode === left) {
     this.position.angle -= turnStep;
   } else if (keyCode === right) {
     this.position.angle += turnStep;
-  } else {
-    return;
   }
 
-  this.render();
+  // this.render();
 };
 
 function init() {
@@ -89,7 +95,6 @@ function init() {
   img.onload = function() {
 
     var mode7 = new Mode7Manager(canvas, img);
-    mode7.render();
     window.onkeydown = (e) => { mode7.handleKeyDown(e); };
 
     global.mode7 = mode7;
