@@ -1,4 +1,4 @@
-var mode7 = require('./renderer');
+var mode7 = require('./util/mode7');
 
 function imageDataFromImg(img) {
   // draw original to an in-memory canvas

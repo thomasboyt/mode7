@@ -42,6 +42,8 @@ function putPixelData(imgData, pixelData, x, y) {
  *       - spaceZ [int]           Height of the camera above the plane
  *       - scaleX, scaleY [int]   Scale of space coordinates to screen coordinates
  *       - horizon [int]          Horizon location on the screen
+ *       - fallbackColor [array]  Array of [int, int, int, int] representing [r, g, b, alpha] to
+ *                                render for area outside of bounds
  */
 function mode7(target, input, cx, cy, angle, config) {
 
