@@ -80,10 +80,9 @@ function mode7(target, input, cx, cy, angle, config) {
       if (rSpaceX < input.width && rSpaceX >= 0 && rSpaceY < input.height && rSpaceY >= 0) {
         var pixelData = getPixelData(input, rSpaceX, rSpaceY);
         putPixelData(target, pixelData, screenX, screenY);
-
-        spaceX += dx;
-        spaceY += dy;
       }
+      spaceX += dx;
+      spaceY += dy;
     }
   }
 }
