@@ -13,18 +13,20 @@ class Game {
       texture: image,
 
       position: {
-        x: 877,
-        y: 605,
-        angle: 45
+        x: 897,
+        y: 667,
+        angle: 270
       },
       mode7Config: {
-        spaceZ: 15,
-        scaleX: 300,
-        scaleY: 300,
-        horizon: 50  // todo: wtf?
+        spaceZ: 25,
+        scaleX: 350,
+        scaleY: 250,
+        horizon: 0
       },
       horizOffset: 50
     });
+
+    window.world = world;
   }
 }
 
