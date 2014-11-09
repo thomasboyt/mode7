@@ -22,6 +22,9 @@ class World {
   }
 
   draw(ctx) {
+    ctx.fillStyle = 'skyblue';
+    ctx.fillRect(0, 0, this.game.width, this.horizOffset);
+
     var target = ctx.createImageData(this.game.width, this.game.height);
 
     var rad = this.position.angle * (Math.PI/180);

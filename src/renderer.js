@@ -9,11 +9,7 @@ function getPixelData(imgData, x, y) {
   var offset = getImgDataOffset(imgData, x, y);
 
   if (data[offset] === undefined) {
-    // render black if no data exists
-    out[0] = 0;
-    out[1] = 0;
-    out[2] = 0;
-    out[3] = 255;
+    throw new Error('attempting to render undefined pixel');
   } else {
     out[0] = data[offset];
     out[1] = data[offset+1];
@@ -77,10 +73,14 @@ function mode7(target, input, cx, cy, angle, config) {
       var rSpaceX = Math.round(spaceX);
       var rSpaceY = Math.round(spaceY);
 
+      var pixelData;
       if (rSpaceX < input.width && rSpaceX >= 0 && rSpaceY < input.height && rSpaceY >= 0) {
-        var pixelData = getPixelData(input, rSpaceX, rSpaceY);
-        putPixelData(target, pixelData, screenX, screenY);
+        pixelData = getPixelData(input, rSpaceX, rSpaceY);
+      } else {
+        pixelData = config.fallbackColor;
       }
+
+      putPixelData(target, pixelData, screenX, screenY);
       spaceX += dx;
       spaceY += dy;
     }
