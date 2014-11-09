@@ -7,10 +7,19 @@ function getPixelData(imgData, x, y) {
   var out = [];
 
   var offset = getImgDataOffset(imgData, x, y);
-  out[0] = data[offset];
-  out[1] = data[offset+1];
-  out[2] = data[offset+2];
-  out[3] = data[offset+3];
+
+  if (data[offset] === undefined) {
+    // render black if no data exists
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 255;
+  } else {
+    out[0] = data[offset];
+    out[1] = data[offset+1];
+    out[2] = data[offset+2];
+    out[3] = data[offset+3];
+  }
 
   return out;
 }

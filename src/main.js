@@ -17,27 +17,29 @@ var Mode7Manager = function(canvas, img) {
   this.originMap = imageDataFromImage(img);
 
   this.position = {
-    x: 500,
-    y: 500,
-    angle: 0
+    x: 877,
+    y: 605,
+    angle: 270
   };
 
   this.config = {
-    spaceZ: 20,
-    scaleX: 3000,
-    scaleY: 3000,
-    horizon: 250
+    spaceZ: 15,
+    scaleX: 300,
+    scaleY: 300,
+    horizon: 6  // todo: wtf?
   };
+
+  this.horizOffset = 50;
 };
 
-Mode7Manager.prototype.render = function(cx, cy, angle) {
+Mode7Manager.prototype.render = function() {
   var ctx = this.canvas.getContext('2d');
   var target = ctx.createImageData(canvas.width, canvas.height);
 
   var rad = this.position.angle * (Math.PI/180);
   mode7(target, this.originMap, this.position.x, this.position.y, rad, this.config);
 
-  ctx.putImageData(target, 0, 0, 0, 0, 500, 500);
+  ctx.putImageData(target, 0, this.horizOffset, 0, 0, this.canvas.width, this.canvas.height - this.horizOffset);
 };
 
 // Move forward or backward by step based on current angle
@@ -80,14 +82,14 @@ Mode7Manager.prototype.handleKeyDown = function(e) {
 function init() {
   var canvas = document.getElementById('canvas');
   canvas.width = 500;
-  canvas.height = 500;
+  canvas.height = 250;
 
   var img = new Image();
 
   img.onload = function() {
 
     var mode7 = new Mode7Manager(canvas, img);
-    mode7.render(500, 500, 0);
+    mode7.render();
     window.onkeydown = (e) => { mode7.handleKeyDown(e); };
 
     global.mode7 = mode7;
