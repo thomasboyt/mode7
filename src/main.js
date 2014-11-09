@@ -1,5 +1,5 @@
 var Coquette = require('coquette');
-var mapUrl = require('../assets/crop_map.png');
+var mapUrl = require('../assets/map.png');
 var World = require('./World');
 
 class Game {
