@@ -74,11 +74,16 @@ function mode7(target, input, cx, cy, angle, config) {
     var spaceY = cy + (distance * Math.sin(angle)) - width/2 * dy;
 
     for (var screenX = 0; screenX < width; screenX++) {
-      var pixelData = getPixelData(input, Math.round(spaceX), Math.round(spaceY));
-      putPixelData(target, pixelData, screenX, screenY);
+      var rSpaceX = Math.round(spaceX);
+      var rSpaceY = Math.round(spaceY);
 
-      spaceX += dx;
-      spaceY += dy;
+      if (rSpaceX < input.width && rSpaceX >= 0 && rSpaceY < input.height && rSpaceY >= 0) {
+        var pixelData = getPixelData(input, rSpaceX, rSpaceY);
+        putPixelData(target, pixelData, screenX, screenY);
+
+        spaceX += dx;
+        spaceY += dy;
+      }
     }
   }
 }

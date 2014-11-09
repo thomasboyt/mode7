@@ -15,13 +15,13 @@ class Game {
       position: {
         x: 877,
         y: 605,
-        angle: 270
+        angle: 45
       },
       mode7Config: {
         spaceZ: 15,
         scaleX: 300,
         scaleY: 300,
-        horizon: 6  // todo: wtf?
+        horizon: 50  // todo: wtf?
       },
       horizOffset: 50
     });
