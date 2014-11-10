@@ -7,7 +7,7 @@ module.exports = {
   },
 
   output: {
-    path: 'public/',
+    path: 'build/',
     filename: "bundle.js"
   },
 
