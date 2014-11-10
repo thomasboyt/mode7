@@ -32,6 +32,8 @@
     "grunt-contrib-copy": "~0.7.0"
   },
   "dependencies": {
-    "coquette": "git://github.com/thomasboyt/coquette.git#commonjs"
+    "coquette": "git://github.com/thomasboyt/coquette.git#commonjs",
+    "q": "~1.1.0",
+    "lodash": "~2.4.1"
   }
 }

@@ -1,4 +1,4 @@
-var mode7 = require('./util/mode7');
+var mode7 = require('./util/mode7/ground');
 
 function imageDataFromImg(img) {
   // draw original to an in-memory canvas
@@ -15,10 +15,23 @@ class World {
   constructor(game, opts) {
     this.game = game;
 
-    this.textureImageData = imageDataFromImg(opts.texture);
-    this.position = opts.position;
+    this.textureImageData = imageDataFromImg(this.game.assets.images.map);
     this.horizOffset = opts.horizOffset;
     this.config = opts.mode7Config;
+  }
+
+  moveCamera(kartPos) {
+    // move camera behind kart
+
+    var angle = kartPos.angle * Math.PI/180;
+    var dx = Math.cos(angle) * -26;
+    var dy = Math.sin(angle) * -26;
+
+    this.position = {
+      x: kartPos.x + dx,
+      y: kartPos.y + dy,
+      angle: kartPos.angle
+    };
   }
 
   draw(ctx) {
@@ -34,33 +47,6 @@ class World {
                      this.game.width, this.game.height - this.horizOffset);
   }
 
-  _move(step) {
-    var angle = this.position.angle * Math.PI/180;
-    var dx = Math.cos(angle) * step;
-    var dy = Math.sin(angle) * step;
-
-    this.position.x = this.position.x + dx;
-    this.position.y = this.position.y + dy;
-  }
-
-  update(dt) {
-    var c = this.game.c;
-
-    var step = 10 * dt/100;
-    var turnStep = 10 * dt/100;
-
-    if (c.inputter.isDown(c.inputter.W)) {
-      this._move(step);
-    } else if (c.inputter.isDown(c.inputter.S)) {
-      this._move(-step);
-    }
-
-    if (c.inputter.isDown(c.inputter.A)) {
-      this.position.angle -= turnStep;
-    } else if (c.inputter.isDown(c.inputter.D)) {
-      this.position.angle += turnStep;
-    }
-  }
 }
 
 module.exports = World;

@@ -4,20 +4,18 @@ function getImgDataOffset(imgData, x, y) {
 
 function getPixelData(imgData, x, y) {
   var data = imgData.data;
-  var out = [];
-
   var offset = getImgDataOffset(imgData, x, y);
 
   if (data[offset] === undefined) {
     throw new Error('attempting to render undefined pixel');
-  } else {
-    out[0] = data[offset];
-    out[1] = data[offset+1];
-    out[2] = data[offset+2];
-    out[3] = data[offset+3];
   }
 
-  return out;
+  return [
+    data[offset],
+    data[offset+1],
+    data[offset+2],
+    data[offset+3]
+  ];
 }
 
 function putPixelData(imgData, pixelData, x, y) {
@@ -34,10 +32,10 @@ function putPixelData(imgData, pixelData, x, y) {
  * http://helixsoft.nl/articles/circle/sincos.htm
  *
  * Params:
- *   - target [ImageData]   An ImageData object to use for output
- *   - input [ImageData]    The ImageData to draw pixels from
- *   - cx, cx [int]         The origin on the original plane
- *   - angle [int]          The angle (in radians) on the original plane
+ *   - target [ImageData]       An ImageData object to use for output
+ *   - input [ImageData]        The ImageData to draw pixels from
+ *   - cx, cx [int]             The camera position
+ *   - angle [int]              The camera angle (in radians)
  *   - config [object]:
  *       - spaceZ [int]           Height of the camera above the plane
  *       - scaleX, scaleY [int]   Scale of space coordinates to screen coordinates

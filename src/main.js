@@ -1,15 +1,22 @@
 var Game = require('./Game');
+var AssetPreloader = require('./util/AssetPreloader');
+
 var mapUrl = require('../assets/map.png');
+var marioUrl = require('../assets/kart-sheet-mario.png');
+var marioBackUrl = require('../assets/mario-back.png');
 
-// TODO: replace this with something like AssetPreloader
 function init() {
-  var img = new Image();
+  var preloader = new AssetPreloader({
+    images: {
+      map: mapUrl,
+      mario: marioUrl,
+      marioBack: marioBackUrl
+    }
+  });
 
-  img.onload = function() {
-    new Game(img);
-  };
-
-  img.src = mapUrl;
+  preloader.load().done(function(assets) {
+    new Game(assets);
+  });
 }
 
-init();
+window.onload = init;
