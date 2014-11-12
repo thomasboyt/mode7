@@ -1,4 +1,4 @@
-var mode7 = require('./util/mode7/ground');
+var drawGround = require('./util/mode7/drawGround');
 
 function imageDataFromImg(img) {
   // draw original to an in-memory canvas
@@ -41,7 +41,7 @@ class World {
     var target = ctx.createImageData(this.game.width, this.game.height);
 
     var rad = this.position.angle * (Math.PI/180);
-    mode7(target, this.textureImageData, this.position.x, this.position.y, rad, this.config);
+    drawGround(target, this.textureImageData, this.position.x, this.position.y, rad, this.config);
 
     ctx.putImageData(target, 0, this.horizOffset, 0, 0,
                      this.game.width, this.game.height - this.horizOffset);
