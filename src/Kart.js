@@ -1,8 +1,10 @@
 var drawObject = require('./util/mode7/drawObject');
+var calcVector = require('./util/calcVector');
 
 class Kart {
   constructor(game, opts) {
     this.game = game;
+
     this.image = this.game.assets.images.mario;
     this.imageParams = {
       x: 2,
@@ -10,8 +12,16 @@ class Kart {
       w: 28,
       h: 30
     };
-    this.position = opts.position;
     this.mode7Config = opts.mode7Config;
+
+    this.MAX_SPEED = 8;
+    this.MAX_BACKWARDS_SPEED = -3;
+    this.ACCEL = 6;
+    this.FRICTION_ACCEL = -2;
+    this.TURN_SPEED = 9;
+
+    this.position = opts.position;
+    this.speed = 0;
   }
 
   draw(ctx) {
@@ -21,32 +31,65 @@ class Kart {
                this.position.x, this.position.y, this.mode7Config);
   }
 
-  _move(step) {
-    var angle = this.position.angle * Math.PI/180;
-    var dx = Math.cos(angle) * step;
-    var dy = Math.sin(angle) * step;
+  _accel(dt, isForward) {
+    var mult = isForward ? 1 : -1;
+    var spd = this.speed + mult * this.ACCEL * dt/1000;
 
-    this.position.x = this.position.x + dx;
-    this.position.y = this.position.y + dy;
+    if (spd > this.MAX_SPEED) {
+      spd = this.MAX_SPEED;
+    } else if (spd < this.MAX_BACKWARDS_SPEED) {
+      spd = this.MAX_BACKWARDS_SPEED;
+    }
+
+    this.speed = spd;
+  }
+
+  _applyFriction(dt) {
+    if (this.speed > 0) {
+      this.speed = this.speed + this.FRICTION_ACCEL * dt/1000;
+    } else if (this.speed < 0) {
+      this.speed = this.speed - this.FRICTION_ACCEL * dt/1000;
+    }
+  }
+
+  _turn(dt, isRight) {
+    var mult = isRight ? 1 : -1;
+
+    // scale increases linearly until 3/4 of max is reached
+    var scaleFactor = this.speed * 2 / this.MAX_SPEED;
+    if (scaleFactor > 1.5) { scaleFactor = 1; }
+
+    var turnStep = mult * (this.TURN_SPEED * dt/100) * scaleFactor;
+
+    this.position.angle += turnStep;
+  }
+
+  _updatePosition() {
+    // Calculate new angle based on speed
+    var vec = calcVector(this.speed, this.position.angle);
+
+    this.position.x += vec.x;
+    this.position.y += vec.y;
   }
 
   update(dt) {
     var c = this.game.c;
 
-    var step = 10 * dt/100;
-    var turnStep = 10 * dt/100;
-
     if (c.inputter.isDown(c.inputter.W)) {
-      this._move(step);
-    } else if (c.inputter.isDown(c.inputter.S)) {
-      this._move(-step);
+      this._accel(dt, true);
+    }  else if (c.inputter.isDown(c.inputter.S)) {
+      this._accel(dt, false);
     }
+
+    this._applyFriction(dt);
 
     if (c.inputter.isDown(c.inputter.A)) {
-      this.position.angle -= turnStep;
+      this._turn(dt, false);
     } else if (c.inputter.isDown(c.inputter.D)) {
-      this.position.angle += turnStep;
+      this._turn(dt, true);
     }
+
+    this._updatePosition();
 
     this.game.world.moveCamera(this.position);
   }
