@@ -11,6 +11,8 @@ class Game {
 
     this.c = window.__coquette__ = new Coquette(this, 'canvas', this.width, this.height, 'black');
 
+    this.c.renderer.getCtx().imageSmoothingEnabled = false;
+
     var mode7Config = {
       horizon: 0,
 
