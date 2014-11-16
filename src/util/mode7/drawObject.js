@@ -4,6 +4,11 @@
  *
  * Params:
  *   - ctx [CanvasRenderingContext2D]
+ *   - targetSize[object]: A rectangle representing the rendered-into area
+ *       - x
+ *       - y
+ *       - w
+ *       - h
  *   - img [ImageData]    The Image to render
  *   - imageParams [object]:
  *       - x
@@ -20,7 +25,7 @@
  *       - objScaleX [int]
  *       - objScaleY [int]
  */
-function drawObject(ctx, img, imageParams, cx, cy, angle, objX, objY, config) {
+function drawObject(ctx, targetSize, img, imageParams, cx, cy, angle, objX, objY, config) {
 
   // calculate position relative to camera
   objX = objX - cx;
@@ -32,16 +37,16 @@ function drawObject(ctx, img, imageParams, cx, cy, angle, objX, objY, config) {
 
   // calculate the screen coordinates that go with these space coordinates
   // by dividing everything by spaceX (the distance)
-  var screenX = ctx.canvas.width / 2 + Math.round(config.scaleX / spaceX * spaceY);
+  var screenX = targetSize.w / 2 + Math.round(config.scaleX / spaceX * spaceY);
   var screenY = Math.round(config.spaceZ * config.scaleY / spaceX) - config.horizon;
 
   // the size of the object has to be scaled according to the distance
-  var height = Math.round(ctx.canvas.height * (config.objScaleY / spaceX));
-  var width = Math.round(ctx.canvas.width * (config.objScaleX / spaceX));
+  var width = Math.round(targetSize.w * (config.objScaleX / spaceX));
+  var height = Math.round(targetSize.h * (config.objScaleY / spaceX));
 
   // draw the object
   ctx.drawImage(img, imageParams.x, imageParams.y, imageParams.w, imageParams.h,
-                screenX - width / 2, screenY - height, width, height);
+                targetSize.x + (screenX - width / 2), targetSize.y + (screenY - height), width, height);
 }
 
 module.exports = drawObject;

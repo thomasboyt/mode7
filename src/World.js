@@ -16,7 +16,8 @@ class World {
     this.game = game;
 
     this.textureImageData = imageDataFromImg(this.game.assets.images.map);
-    this.horizOffset = opts.horizOffset;
+    this.horizonOffset = opts.horizonOffset || 0;
+    this.cameraOffset = opts.cameraOffset || 0;
     this.config = opts.mode7Config;
   }
 
@@ -24,8 +25,8 @@ class World {
     // move camera behind kart
 
     var angle = kartPos.angle * Math.PI/180;
-    var dx = Math.cos(angle) * -26;
-    var dy = Math.sin(angle) * -26;
+    var dx = Math.cos(angle) * this.cameraOffset;
+    var dy = Math.sin(angle) * this.cameraOffset;
 
     this.position = {
       x: kartPos.x + dx,
@@ -35,16 +36,19 @@ class World {
   }
 
   draw(ctx) {
+    // Skybox
     ctx.fillStyle = 'skyblue';
-    ctx.fillRect(0, 0, this.game.width, this.horizOffset);
+    ctx.fillRect(0, 0, this.game.width, this.horizonOffset);
 
-    var target = ctx.createImageData(this.game.width, this.game.height);
+    // Ground
+    var height = this.game.height - this.horizonOffset;
+    var target = ctx.createImageData(this.game.width, height);
 
     var rad = this.position.angle * (Math.PI/180);
     drawGround(target, this.textureImageData, this.position.x, this.position.y, rad, this.config);
 
-    ctx.putImageData(target, 0, this.horizOffset, 0, 0,
-                     this.game.width, this.game.height - this.horizOffset);
+    ctx.putImageData(target, 0, this.horizonOffset, 0, 0,
+                     this.game.width, height);
   }
 
 }

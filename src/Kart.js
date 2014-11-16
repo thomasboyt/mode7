@@ -12,6 +12,7 @@ class Kart {
       w: 28,
       h: 30
     };
+    this.horizonOffset = opts.horizonOffset || 0;
     this.mode7Config = opts.mode7Config;
 
     this.MAX_SPEED = 8;
@@ -27,7 +28,14 @@ class Kart {
   draw(ctx) {
     var cameraPos = this.game.world.position;
     var angle = cameraPos.angle * Math.PI/180;
-    drawObject(ctx, this.image, this.imageParams, cameraPos.x, cameraPos.y, angle,
+
+    var targetSize = {
+      w: this.game.width,
+      h: this.game.height - this.horizonOffset,
+      x: 0,
+      y: this.horizonOffset
+    };
+    drawObject(ctx, targetSize, this.image, this.imageParams, cameraPos.x, cameraPos.y, angle,
                this.position.x, this.position.y, this.mode7Config);
   }
 
@@ -64,12 +72,12 @@ class Kart {
     this.position.angle += turnStep;
   }
 
-  _updatePosition() {
+  _updatePosition(dt) {
     // Calculate new angle based on speed
     var vec = calcVector(this.speed, this.position.angle);
 
-    this.position.x += vec.x;
-    this.position.y += vec.y;
+    this.position.x += vec.x * dt/50;
+    this.position.y += vec.y * dt/50;
   }
 
   update(dt) {
@@ -89,7 +97,7 @@ class Kart {
       this._turn(dt, true);
     }
 
-    this._updatePosition();
+    this._updatePosition(dt);
 
     this.game.world.moveCamera(this.position);
   }

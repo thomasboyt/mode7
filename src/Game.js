@@ -6,26 +6,29 @@ class Game {
   constructor(assets) {
     this.assets = assets;
 
-    this.width = 500;
-    this.height = 250;
+    this.width = 240;
+    this.height = 160;
 
     this.c = window.__coquette__ = new Coquette(this, 'canvas', this.width, this.height, 'black');
 
     var mode7Config = {
       horizon: 0,
 
-      spaceZ: 25,
-      scaleX: 350,
-      scaleY: 250,
+      spaceZ: 12,
+      scaleX: 200,
+      scaleY: 200,
 
-      objScaleX: 4,
-      objScaleY: 8,
+      objScaleX: 6,
+      objScaleY: 16,
 
       fallbackColor: [104, 80, 8, 255],
     };
+    window.config = mode7Config;
 
     var kart = this.c.entities.create(Kart, {
       mode7Config: mode7Config,
+      horizonOffset: 75,
+
       position: {
         x: 897,
         y: 667,
@@ -34,8 +37,9 @@ class Game {
     });
 
     this.world = this.c.entities.create(World, {
+      cameraOffset: -30,
       mode7Config: mode7Config,
-      horizOffset: 50
+      horizonOffset: 75
     });
 
   }
