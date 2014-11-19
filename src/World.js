@@ -1,20 +1,8 @@
 /* @flow */
 
 var drawGround = require('./util/mode7/drawGround');
+var imageDataFromImg = require('./util/imageDataFromImage');
 var Game = require('./Game');
-
-// draw original to an in-memory canvas
-function imageDataFromImg(img: Image): ImageData {
-
-  // TODO: this is cast to `any` because there's no declaration for HTMLCanvasElement yet :<
-  var canvas : any = document.createElement('canvas');
-  canvas.width = img.width;
-  canvas.height = img.height;
-
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-  return ctx.getImageData(0, 0, img.width, img.height);
-}
 
 type Mode7Config = {
   horizon: number;

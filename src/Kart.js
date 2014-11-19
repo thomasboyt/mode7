@@ -4,14 +4,6 @@ var drawObject = require('./util/mode7/drawObject');
 var calcVector = require('./util/calcVector');
 var Game = require('./Game');
 
-
-var MAX_SPEED = 8;
-var MAX_BACKWARDS_SPEED = -3;
-var ACCEL = 6;
-var FRICTION_ACCEL = -2;
-var TURN_SPEED = 9;
-
-
 type Mode7Config = {
   horizon: number;
   spaceZ: number;
@@ -20,13 +12,6 @@ type Mode7Config = {
   objScaleX: number;
   objScaleY: number;
   fallbackColor: [number, number, number, number]
-};
-
-type KartOpts = {
-  textureImageData: ImageData;  // TODO: No ImageData declaration either D:
-  horizonOffset: number;
-  mode7Config: Mode7Config;
-  position: Position;
 };
 
 type Position = {
@@ -41,6 +26,20 @@ type Rectangle = {
   w: number;
   h: number;
 };
+
+type KartOpts = {
+  textureImageData: ImageData;  // TODO: No ImageData declaration either D:
+  horizonOffset: number;
+  mode7Config: Mode7Config;
+  position: Position;
+};
+
+
+var MAX_SPEED = 8;
+var MAX_BACKWARDS_SPEED = -3;
+var ACCEL = 6;
+var FRICTION_ACCEL = -2;
+var TURN_SPEED = 9;
 
 class Kart {
   game: Game;

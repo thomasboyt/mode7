@@ -14,14 +14,12 @@ type AssetMap = {
 }
 
 class Game {
-  // c: Coquette;
-  // width: number;
-  // height: number;
+  c: Coquette;
   assets: AssetMap;
   width: number;
   height: number;
 
-  constructor(assets : AssetMap) {
+  constructor(assets: AssetMap) {
     this.assets = assets;
 
     this.width = 240;
@@ -43,6 +41,7 @@ class Game {
 
       fallbackColor: [104, 80, 8, 255],
     };
+
     window.config = mode7Config;
 
     var kart = this.c.entities.create(Kart, {
