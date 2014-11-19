@@ -1,54 +1,88 @@
+/* @flow */
+
 var q = require('q');
 var _ = require('lodash');
 
-var AssetPreloader = function(assetCfg) {
-  /* jshint loopfunc: true */
+type AssetMap = {
+  images: {
+    [key:string]: Image
+  };
+  audio: {
+    [key:string]: ArrayBuffer
+  };
+}
 
-  this.assets = {
-    'images': {},
-    'audio': {}
+type AssetCfg = {
+  images: ?{
+    [key:string]: string
+  };
+  audio: ?{
+    [key:string]: string
+  };
+}
+
+class AssetPreloader {
+  assets: AssetMap;
+  numTotal: number;
+  numLoaded: number;
+
+  _images: ?{
+    [key:string]: string
+  };
+  _audio: ?{
+    [key:string]: string
   };
 
-  this._images = assetCfg.images;
-  this._audio = assetCfg.audio;
+  constructor (assetCfg : AssetCfg) {
+    /* jshint loopfunc: true */
 
-  this.numTotal = _.keys(this._images).length + _.keys(this._audio).length;
-  this.numLoaded = 0;
-};
+    this.assets = {
+      'images': {},
+      'audio': {}
+    };
 
-AssetPreloader.prototype.load = function() {
-  this.dfd = q.defer();
+    this._images = assetCfg.images;
+    this._audio = assetCfg.audio;
 
-  _.each(this._images, function(src, name) {
-    var img = new Image();
-    img.onload = this.onAssetLoaded.bind(this);
-    img.src = src;
-
-    this.assets.images[name] = img;
-  }.bind(this));
-
-  _.each(this._audio, function(src, name) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', src, true);
-    xhr.responseType = 'arraybuffer';
-
-    xhr.onload = function() {
-      this.assets.audio[name] = xhr.response;
-      this.onAssetLoaded();
-    }.bind(this);
-
-    xhr.send();
-  }.bind(this));
-
-  return this.dfd.promise;
-};
-
-AssetPreloader.prototype.onAssetLoaded = function() {
-  this.numLoaded += 1;
-
-  if ( this.numTotal === this.numLoaded ) {
-    this.dfd.resolve(this.assets);
+    this.numTotal = _.keys(this._images).length + _.keys(this._audio).length;
+    this.numLoaded = 0;
   }
-};
+
+  load() : Promise {
+    var dfd = q.defer();
+
+    var onAssetLoaded = () => {
+      this.numLoaded += 1;
+
+      if ( this.numTotal === this.numLoaded ) {
+        dfd.resolve(this.assets);
+      }
+    };
+
+    _.each(this._images, (src, name) => {
+      var img = new Image();
+      img.onload = onAssetLoaded;
+      img.src = src;
+
+      this.assets.images[name] = img;
+    });
+
+    _.each(this._audio, (src, name) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', src, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = () => {
+        this.assets.audio[name] = xhr.response;
+        onAssetLoaded();
+      };
+
+      xhr.send();
+    });
+
+    return dfd.promise;
+  }
+
+}
 
 module.exports = AssetPreloader;

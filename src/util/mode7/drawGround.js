@@ -1,3 +1,5 @@
+/* @flow */
+
 function getImgDataOffset(imgData, x, y) {
   return (x + imgData.width * y) * 4;
 }
@@ -27,6 +29,16 @@ function putPixelData(imgData, pixelData, x, y) {
   imgData.data[offset+3] = pixelData[3];
 }
 
+type Mode7Config = {
+  horizon: number;
+  spaceZ: number;
+  scaleX: number;
+  scaleY: number;
+  objScaleX: number;
+  objScaleY: number;
+  fallbackColor: [number, number, number, number]
+};
+
 /**
  * Based off of:
  * http://helixsoft.nl/articles/circle/sincos.htm
@@ -43,7 +55,12 @@ function putPixelData(imgData, pixelData, x, y) {
  *       - fallbackColor [array]  Array of [int, int, int, int] representing [r, g, b, alpha] to
  *                                render for area outside of bounds
  */
-function mode7(target, input, cx, cy, angle, config) {
+function mode7(target: ImageData,
+               input: ImageData,
+               cx: number,
+               cy: number,
+               angle: number,
+               config: Mode7Config) {
 
   var spaceZ = config.spaceZ;
   var scaleX = config.scaleX;

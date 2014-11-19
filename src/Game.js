@@ -1,9 +1,27 @@
+/* @flow */
+
 var Coquette = require('coquette');
 var World = require('./World');
 var Kart = require('./Kart');
 
+type AssetMap = {
+  images: {
+    [key: string]: Image
+  };
+  audio: {
+    [key:string]: ArrayBuffer
+  };
+}
+
 class Game {
-  constructor(assets) {
+  // c: Coquette;
+  // width: number;
+  // height: number;
+  assets: AssetMap;
+  width: number;
+  height: number;
+
+  constructor(assets : AssetMap) {
     this.assets = assets;
 
     this.width = 240;

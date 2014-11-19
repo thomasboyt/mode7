@@ -1,3 +1,22 @@
+/* @flow */
+
+type Mode7Config = {
+  horizon: number;
+  spaceZ: number;
+  scaleX: number;
+  scaleY: number;
+  objScaleX: number;
+  objScaleY: number;
+  fallbackColor: [number, number, number, number]
+};
+
+type Rectangle = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
+
 /**
  * Based off of:
  * http://helixsoft.nl/articles/circle/sincos.htm
@@ -25,7 +44,16 @@
  *       - objScaleX [int]
  *       - objScaleY [int]
  */
-function drawObject(ctx, targetSize, img, imageParams, cx, cy, angle, objX, objY, config) {
+function drawObject(ctx: any,
+                    targetSize: Rectangle,
+                    img: ImageData,
+                    imageParams: Rectangle,
+                    cx: number,
+                    cy: number,
+                    angle: number,
+                    objX: number,
+                    objY: number,
+                    config: Mode7Config) {
 
   // calculate position relative to camera
   objX = objX - cx;

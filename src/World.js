@@ -1,8 +1,13 @@
-var drawGround = require('./util/mode7/drawGround');
+/* @flow */
 
-function imageDataFromImg(img) {
-  // draw original to an in-memory canvas
-  var canvas = document.createElement('canvas');
+var drawGround = require('./util/mode7/drawGround');
+var Game = require('./Game');
+
+// draw original to an in-memory canvas
+function imageDataFromImg(img: Image): ImageData {
+
+  // TODO: this is cast to `any` because there's no declaration for HTMLCanvasElement yet :<
+  var canvas : any = document.createElement('canvas');
   canvas.width = img.width;
   canvas.height = img.height;
 
@@ -11,17 +16,47 @@ function imageDataFromImg(img) {
   return ctx.getImageData(0, 0, img.width, img.height);
 }
 
+type Mode7Config = {
+  horizon: number;
+  spaceZ: number;
+  scaleX: number;
+  scaleY: number;
+  objScaleX: number;
+  objScaleY: number;
+  fallbackColor: [number, number, number, number]
+};
+
+type WorldOpts = {
+  textureImageData: ImageData;  // TODO: No ImageData declaration either D:
+  horizonOffset: number;
+  cameraOffset: number;
+  mode7Config: Mode7Config;
+};
+
+type Position = {
+  x: number;
+  y: number;
+  angle: number;
+}
+
 class World {
-  constructor(game, opts) {
+  textureImageData: ImageData;
+  horizonOffset: number;
+  cameraOffset: number;
+  config: Mode7Config;
+  position: Position;
+  game: Game;
+
+  constructor(game : Game, opts : WorldOpts) {
     this.game = game;
 
-    this.textureImageData = imageDataFromImg(this.game.assets.images.map);
+    this.textureImageData = imageDataFromImg(this.game.assets.images['map']);
     this.horizonOffset = opts.horizonOffset || 0;
     this.cameraOffset = opts.cameraOffset || 0;
     this.config = opts.mode7Config;
   }
 
-  moveCamera(kartPos) {
+  moveCamera(kartPos : Position) {
     // move camera behind kart
 
     var angle = kartPos.angle * Math.PI/180;
@@ -35,7 +70,8 @@ class World {
     };
   }
 
-  draw(ctx) {
+  // TODO: ctx : Canvas2DRenderingContext
+  draw(ctx : any) {
     // Skybox
     ctx.fillStyle = 'skyblue';
     ctx.fillRect(0, 0, this.game.width, this.horizonOffset);
