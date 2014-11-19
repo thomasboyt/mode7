@@ -23,7 +23,14 @@ module.exports = {
 
   module: {
     loaders: [
-      {test: /\.js$/, loader: 'esnext'},
+      {
+        test: /\.js$/,
+        loader: 'jsx-loader',
+        query: {
+          stripTypes: true,
+          harmony: true
+        }
+      },
 
       {
         test: /\.png$/,
